@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Filmes</title>
+</head>
+<body>
+    <h1>Busca de Filmes</h1>
+    <form id="searchForm">
+        <label for="filmeInput">Digite o nome de um filme:</label>
+        <input type="text" id="filmeInput" name="filmeInput" required>
+        <button type="button" onclick="buscarFilmes()">Buscar</button>  <!-- O botão agora chama a função buscarFilmes() -->
+    </form>
+    
+    <div id="resultado">
+        <!-- Aqui é onde o resultado será exibido -->
+    </div>
+
+    <script>
+        function buscarFilmes() {
+            let filme = document.getElementById("filmeInput").value;  // Obtém o valor do campo de texto 'filmeInput'
+            fetch(`http://localhost:5000/buscar_filmes?filme=${filme}`)  // Faz uma solicitação GET para o servidor Flask, passando o nome do filme como parâmetro de consulta
+                .then(response => response.json())  // Converte a resposta JSON da solicitação em um objeto JavaScript
+                .then(data => {  // Função de callback para processar os dados recebidos
+                    document.getElementById("resultado").innerHTML = `
+                        <p>Quantidade de filmes encontrados para "${filme}": ${data.quantidade_filmes}</p>  <!-- Atualiza a div 'resultado' com a quantidade de filmes encontrados -->
+                    `;
+                })
+                .catch(error => {  // Função de callback para lidar com erros
+                    console.error('Erro ao buscar informações do filme:', error);
+                });
+        }
+    </script>
+</body>
+</html>
